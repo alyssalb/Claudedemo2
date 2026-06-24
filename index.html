@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alyssa Barrack — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Josefin+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== CSS CUSTOM PROPERTIES ===== */
+    :root {
+      --burnt-orange: #C45C26;
+      --mustard: #E8B84B;
+      --avocado: #6B7A3E;
+      --harvest-gold: #D4A017;
+      --warm-brown: #5C3A1E;
+      --cream: #F5F0E8;
+      --rust: #A0341A;
+      --olive: #8B9440;
+      --font-display: 'Pacifico', cursive;
+      --font-body: 'Josefin Sans', sans-serif;
+      --section-pad: clamp(60px, 8vw, 120px);
+      --card-radius: 12px;
+      --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* ===== RESET + BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; cursor: none; }
+    body {
+      font-family: var(--font-body);
+      background-color: var(--cream);
+      color: var(--warm-brown);
+      overflow-x: hidden;
+    }
+    h1, h2, h3 { font-family: var(--font-display); }
+    a { color: inherit; text-decoration: none; }
+    section { position: relative; padding: var(--section-pad) clamp(20px, 8vw, 120px); }
+
+    /* Subtle geometric bg pattern */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: -1;
+      background-image:
+        repeating-linear-gradient(45deg, rgba(196,92,38,0.04) 0px, rgba(196,92,38,0.04) 1px, transparent 1px, transparent 22px),
+        repeating-linear-gradient(-45deg, rgba(232,184,75,0.04) 0px, rgba(232,184,75,0.04) 1px, transparent 1px, transparent 22px);
+    }
+
+    /* ===== SKIP LINK ===== */
+    .skip-link {
+      position: absolute; top: -100px; left: 16px;
+      background: var(--burnt-orange); color: var(--cream);
+      padding: 8px 16px; border-radius: 999px;
+      font-family: var(--font-body); font-weight: 700;
+      z-index: 99999; transition: top 0.2s;
+    }
+    .skip-link:focus { top: 16px; }
+
+    /* ===== CUSTOM CURSOR ===== */
+    #cursor-dot {
+      position: fixed; width: 8px; height: 8px;
+      background: var(--burnt-orange); border-radius: 50%;
+      pointer-events: none; z-index: 10000;
+      transform: translate(-50%, -50%);
+      transition: width 0.1s, height 0.1s;
+    }
+    #cursor-glow {
+      position: fixed; width: 40px; height: 40px;
+      border-radius: 50%; pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(196,92,38,0.35) 0%, transparent 70%);
+      mix-blend-mode: multiply;
+    }
+
+    /* ===== CONFETTI CANVAS ===== */
+    #confetti-canvas {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none; z-index: 9998;
+    }
+
+    /* ===== STICKY NAV ===== */
+    #main-nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex; align-items: center; gap: 1rem;
+      padding: 12px clamp(16px, 4vw, 60px);
+      background: rgba(92, 58, 30, 0.95);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 3px solid var(--mustard);
+      transition: box-shadow 0.3s;
+    }
+    #main-nav.scrolled { box-shadow: 0 4px 24px rgba(196, 92, 38, 0.35); }
+    .nav-logo {
+      font-family: var(--font-display);
+      color: var(--mustard); font-size: 1.6rem;
+      margin-right: auto; letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+    .nav-links { list-style: none; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .nav-link {
+      font-family: var(--font-body); font-weight: 600;
+      font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--cream);
+      padding: 5px 13px; border-radius: 999px;
+      border: 2px solid transparent;
+      transition: var(--transition-smooth);
+      cursor: none;
+    }
+    .nav-link:hover, .nav-link.active {
+      background: var(--burnt-orange);
+      border-color: var(--mustard); color: var(--cream);
+      box-shadow: 0 0 12px rgba(232, 184, 75, 0.5);
+    }
+    .nav-toggle {
+      display: none; background: none; border: none;
+      color: var(--cream); font-size: 1.5rem; cursor: pointer;
+      padding: 4px 8px;
+    }
+
+    /* ===== SECTION HEADERS (shared) ===== */
+    .section-header { text-align: center; margin-bottom: 2.5rem; }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--burnt-orange);
+      text-shadow: 3px 3px 0 var(--mustard);
+      display: inline-block; position: relative;
+    }
+    .section-title::after {
+      content: '';
+      display: block; height: 4px;
+      background: linear-gradient(90deg, var(--burnt-orange), var(--mustard), var(--avocado));
+      border-radius: 2px; margin-top: 6px;
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.8s ease 0.3s;
+    }
+    .section-title.revealed::after { transform: scaleX(1); }
+    .retro-decorator {
+      font-size: 1.5rem; color: var(--mustard);
+      margin-bottom: 0.5rem; letter-spacing: 0.5em;
+    }
+
+    /* ===== SCROLL REVEAL ===== */
+    .reveal-section {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal-section.revealed { opacity: 1; transform: none; }
+    .reveal-item { opacity: 0; transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal-item.from-left  { transform: translateX(-50px); }
+    .reveal-item.from-right { transform: translateX(50px); }
+    .reveal-item.from-below { transform: translateY(30px); }
+    .reveal-item.revealed   { opacity: 1; transform: none !important; }
+    .reveal-item:nth-child(1) { transition-delay: 0.05s; }
+    .reveal-item:nth-child(2) { transition-delay: 0.15s; }
+    .reveal-item:nth-child(3) { transition-delay: 0.25s; }
+    .reveal-item:nth-child(4) { transition-delay: 0.35s; }
+    .reveal-item:nth-child(5) { transition-delay: 0.45s; }
+    .reveal-item:nth-child(6) { transition-delay: 0.55s; }
+    .reveal-item:nth-child(7) { transition-delay: 0.65s; }
+    .reveal-item:nth-child(8) { transition-delay: 0.75s; }
+
+    /* ===== WAVE DIVIDERS ===== */
+    .wave-divider {
+      position: relative; overflow: hidden;
+      line-height: 0; height: 80px;
+    }
+    .wave-divider svg { display: block; width: 100%; height: 100%; }
+
+    /* ===== HERO ===== */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; position: relative; overflow: hidden;
+      padding-top: 80px;
+      background: linear-gradient(135deg, #C45C26, #E8B84B, #6B7A3E, #D4A017, #A0341A);
+      background-size: 400% 400%;
+      animation: heroGradient 14s ease infinite;
+    }
+    @keyframes heroGradient {
+      0%   { background-position: 0% 50%; }
+      25%  { background-position: 100% 0%; }
+      50%  { background-position: 100% 100%; }
+      75%  { background-position: 0% 100%; }
+      100% { background-position: 0% 50%; }
+    }
+    .sunburst-wrapper {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(320px, 70vw, 700px);
+      height: clamp(320px, 70vw, 700px);
+      opacity: 0.2; z-index: 0;
+    }
+    .sunburst {
+      width: 100%; height: 100%;
+      animation: rotateSunburst 22s linear infinite;
+      transform-origin: center;
+    }
+    @keyframes rotateSunburst {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 9vw, 7.5rem);
+      color: var(--cream);
+      text-shadow: 4px 4px 0 var(--warm-brown), 8px 8px 20px rgba(0,0,0,0.3);
+      line-height: 1.1;
+      display: flex; flex-direction: column; align-items: center; gap: 0.05em;
+    }
+    .name-word {
+      display: inline-block;
+      opacity: 0; transform: translateY(40px) rotate(-3deg);
+      animation: nameEntrance 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    .name-word:nth-child(1) { animation-delay: 0.4s; }
+    .name-word:nth-child(2) { animation-delay: 0.75s; }
+    @keyframes nameEntrance {
+      to { opacity: 1; transform: translateY(0) rotate(0deg); }
+    }
+    .hero-tagline {
+      font-family: var(--font-body); font-weight: 600;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      color: var(--cream); letter-spacing: 0.25em;
+      text-transform: uppercase; margin: 1.4rem 0 2.2rem;
+      min-height: 2em;
+    }
+    .hero-tagline::after {
+      content: '|';
+      animation: blink 0.75s step-end infinite;
+      color: var(--mustard);
+    }
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+    .hero-links {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      justify-content: center;
+    }
+    .hero-btn {
+      display: inline-flex; align-items: center; gap: 0.5em;
+      padding: 13px 28px;
+      background: var(--warm-brown); color: var(--mustard);
+      border: 2px solid var(--mustard); border-radius: 999px;
+      font-family: var(--font-body); font-weight: 700;
+      font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+      transition: var(--transition-smooth);
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+      cursor: none;
+    }
+    .hero-btn:hover {
+      background: var(--mustard); color: var(--warm-brown);
+      box-shadow: 6px 6px 0 rgba(0,0,0,0.3), 0 0 24px rgba(232,184,75,0.4);
+      transform: translate(-2px, -2px);
+    }
+    .hero-orb {
+      position: absolute; border-radius: 50%;
+      opacity: 0.18; pointer-events: none;
+      animation: orbFloat 6s ease-in-out infinite;
+    }
+    .orb-1 { width:350px;height:350px; background:var(--mustard); top:-100px; right:-80px; animation-delay:0s; }
+    .orb-2 { width:220px;height:220px; background:var(--avocado);  bottom:-60px; left:-60px; animation-delay:2s; }
+    .orb-3 { width:170px;height:170px; background:var(--harvest-gold); bottom:15%; right:8%; animation-delay:4s; }
+    @keyframes orbFloat {
+      0%,100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-22px) scale(1.06); }
+    }
+    .hero-scroll-hint {
+      position: absolute; bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+      color: rgba(245,240,232,0.7); font-size: 0.75rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+      animation: bounceHint 2s ease-in-out infinite;
+    }
+    @keyframes bounceHint {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ===== ABOUT ===== */
+    #about { background: var(--cream); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: clamp(2rem, 5vw, 5rem);
+      align-items: center; margin-top: 3rem;
+    }
+    .about-photo-frame {
+      position: relative; aspect-ratio: 3/4;
+      border: 6px solid var(--burnt-orange); border-radius: 14px;
+      background: linear-gradient(135deg, var(--mustard), var(--harvest-gold));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 8px 8px 0 var(--warm-brown);
+    }
+    .photo-inner {
+      width: calc(100% - 24px); height: calc(100% - 24px);
+      border: 3px dashed rgba(245,240,232,0.6); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 0.5rem;
+      background: rgba(255,255,255,0.1);
+    }
+    .photo-initial {
+      font-family: var(--font-display);
+      font-size: 5rem; color: var(--cream);
+      text-shadow: 3px 3px 0 var(--burnt-orange);
+    }
+    .photo-placeholder-text {
+      font-family: var(--font-display); color: var(--cream);
+      font-size: 0.9rem; text-align: center; padding: 0 1rem;
+      opacity: 0.8;
+    }
+    .frame-corner {
+      position: absolute; width: 22px; height: 22px;
+      background: var(--mustard); border-radius: 50%;
+      border: 3px solid var(--burnt-orange);
+    }
+    .fc-tl { top: -11px; left: -11px; }
+    .fc-tr { top: -11px; right: -11px; }
+    .fc-bl { bottom: -11px; left: -11px; }
+    .fc-br { bottom: -11px; right: -11px; }
+    .about-lead {
+      font-size: 1.15rem; font-weight: 600;
+      color: var(--burnt-orange); margin-bottom: 1.2rem; line-height: 1.7;
+    }
+    .about-text p { line-height: 1.85; margin-bottom: 1rem; font-size: 1rem; color: #4a2e0e; }
+    .about-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+    .about-tag {
+      display: inline-block; padding: 5px 14px; border-radius: 999px;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--warm-brown); color: var(--mustard);
+      border: 1px solid var(--mustard);
+    }
+
+    /* ===== EDUCATION TIMELINE ===== */
+    #education { background: var(--warm-brown); }
+    #education .section-title { color: var(--mustard); text-shadow: 3px 3px 0 rgba(0,0,0,0.3); }
+    #education .section-title::after { background: linear-gradient(90deg, var(--mustard), var(--burnt-orange)); }
+    #education .retro-decorator { color: var(--harvest-gold); }
+
+    .timeline {
+      position: relative; max-width: 920px;
+      margin: 0 auto; padding: 2rem 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--mustard), var(--burnt-orange), var(--harvest-gold));
+      transform: translateX(-50%); border-radius: 2px;
+    }
+    .timeline-item {
+      display: flex; align-items: flex-start;
+      margin-bottom: 3.5rem; position: relative;
+    }
+    .timeline-item[data-side="left"]  { flex-direction: row; }
+    .timeline-item[data-side="right"] { flex-direction: row-reverse; }
+    .timeline-dot {
+      position: absolute; left: 50%; top: 18px;
+      transform: translateX(-50%);
+      width: 52px; height: 52px;
+      background: var(--burnt-orange);
+      border: 4px solid var(--mustard); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; z-index: 2;
+      transition: transform 0.35s ease, box-shadow 0.35s;
+    }
+    .timeline-item:hover .timeline-dot {
+      transform: translateX(-50%) scale(1.25);
+      box-shadow: 0 0 22px var(--mustard);
+    }
+    .timeline-card {
+      width: calc(50% - 50px);
+      background: var(--cream); border-radius: var(--card-radius);
+      padding: 1.6rem; border: 3px solid var(--mustard);
+      box-shadow: 5px 5px 0 var(--burnt-orange);
+      transition: var(--transition-smooth);
+    }
+    .timeline-item[data-side="left"]  .timeline-card { margin-right: auto; }
+    .timeline-item[data-side="right"] .timeline-card { margin-left: auto; }
+    .timeline-card:hover { transform: translate(-3px,-3px); box-shadow: 8px 8px 0 var(--burnt-orange); }
+    .timeline-year {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--burnt-orange);
+      background: var(--mustard); padding: 3px 10px; border-radius: 999px;
+      display: inline-block; margin-bottom: 0.6rem;
+    }
+    .timeline-degree { font-family: var(--font-display); font-size: 1.15rem; color: var(--warm-brown); margin-bottom: 0.3rem; }
+    .timeline-school  { font-weight: 700; color: var(--burnt-orange); font-size: 0.88rem; margin-bottom: 0.8rem; }
+    .timeline-details { list-style: none; font-size: 0.83rem; color: #555; line-height: 1.75; }
+    .timeline-details li::before { content: '✦ '; color: var(--mustard); }
+
+    /* ===== ACADEMIC POSITIONS ===== */
+    #positions { background: var(--cream); }
+    .positions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 1.8rem; margin-top: 3rem;
+    }
+    .position-card {
+      position: relative; background: white;
+      border-radius: var(--card-radius);
+      padding: 1.8rem; border: 2px solid var(--mustard);
+      box-shadow: 5px 5px 0 var(--burnt-orange);
+      overflow: hidden; transition: var(--transition-smooth);
+    }
+    .position-card:hover {
+      transform: translate(-4px, -4px) scale(1.02);
+      box-shadow: 9px 9px 0 var(--burnt-orange);
+      border-color: var(--burnt-orange);
+    }
+    .card-accent {
+      position: absolute; top: 0; left: 0; right: 0; height: 5px;
+      background: linear-gradient(90deg, var(--burnt-orange), var(--mustard), var(--avocado));
+    }
+    .card-tag {
+      display: inline-block; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--cream); color: var(--burnt-orange);
+      border: 1px solid var(--burnt-orange); border-radius: 999px;
+      padding: 2px 10px; margin-bottom: 0.7rem;
+    }
+    .position-card h3 {
+      font-family: var(--font-display); font-size: 1.1rem;
+      color: var(--warm-brown); margin-bottom: 0.3rem;
+    }
+    .card-org { font-weight: 700; color: var(--burnt-orange); font-size: 0.85rem; margin-bottom: 0.7rem; }
+    .position-card p:last-child { font-size: 0.86rem; color: #555; line-height: 1.7; }
+
+    /* ===== PUBLICATIONS FLIP CARDS ===== */
+    #publications {
+      background: linear-gradient(160deg, #3D1C06 0%, var(--warm-brown) 100%);
+    }
+    #publications .section-title { color: var(--mustard); text-shadow: 3px 3px 0 rgba(0,0,0,0.4); }
+    #publications .section-title::after { background: linear-gradient(90deg, var(--mustard), var(--harvest-gold)); }
+    #publications .retro-decorator { color: var(--harvest-gold); }
+    .pub-category-label {
+      font-family: var(--font-display); font-size: 1.4rem;
+      color: var(--mustard); margin: 2.5rem 0 1rem;
+      padding-left: 0.7rem; border-left: 4px solid var(--burnt-orange);
+    }
+    .pub-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem; margin-bottom: 0.5rem;
+    }
+    .flip-card {
+      height: 230px; perspective: 1000px;
+      cursor: pointer; outline: none;
+    }
+    .flip-card:focus-visible .flip-inner { transform: rotateY(180deg); }
+    .flip-inner {
+      position: relative; width: 100%; height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.65s cubic-bezier(0.4,0,0.2,1);
+      border-radius: var(--card-radius);
+    }
+    .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+    .flip-front, .flip-back {
+      position: absolute; width: 100%; height: 100%;
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+      border-radius: var(--card-radius);
+      padding: 1.4rem; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .flip-front {
+      background: var(--cream);
+      border: 3px solid var(--mustard);
+      box-shadow: 5px 5px 0 var(--burnt-orange);
+      justify-content: space-between;
+    }
+    .flip-back {
+      background: var(--burnt-orange); color: var(--cream);
+      border: 3px solid var(--mustard);
+      transform: rotateY(180deg);
+      box-shadow: 5px 5px 0 rgba(0,0,0,0.3);
+      font-size: 0.83rem; line-height: 1.65;
+      gap: 0.4rem; justify-content: center;
+    }
+    .flip-back p { margin-bottom: 0.3rem; }
+    .pub-type-badge {
+      display: inline-block; font-size: 0.63rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 2px 10px; border-radius: 999px; margin-bottom: 0.5rem;
+      background: var(--burnt-orange); color: var(--cream);
+    }
+    .flip-back .pub-type-badge { background: var(--mustard); color: var(--warm-brown); }
+    .flip-front h4 {
+      font-family: var(--font-display); font-size: 0.95rem;
+      color: var(--warm-brown); line-height: 1.45; flex: 1;
+    }
+    .pub-venue { font-size: 0.78rem; color: var(--burnt-orange); font-style: italic; margin-top: 0.4rem; }
+    .pub-year  { font-size: 0.72rem; font-weight: 700; color: var(--harvest-gold); margin-top: 0.2rem; }
+    .flip-hint { font-size: 0.68rem; color: var(--burnt-orange); opacity: 0.65; text-align: right; margin-top: 0.4rem; }
+    .pub-keywords { font-size: 0.73rem; font-style: italic; opacity: 0.8; margin-top: 0.5rem; }
+
+    /* ===== CONFERENCES ===== */
+    #conferences { background: var(--cream); }
+    .conf-columns {
+      display: grid; grid-template-columns: 1fr 340px;
+      gap: 3rem; margin-top: 2.5rem;
+    }
+    .conf-list { list-style: none; display: flex; flex-direction: column; gap: 1.3rem; }
+    .conf-item {
+      display: flex; gap: 1rem; align-items: flex-start;
+      padding: 1.2rem; border-radius: 10px;
+      background: white; border: 2px solid var(--mustard);
+      box-shadow: 3px 3px 0 var(--harvest-gold);
+      transition: var(--transition-smooth);
+    }
+    .conf-item:hover { transform: translateX(6px); box-shadow: 5px 5px 0 var(--burnt-orange); }
+    .conf-bullet { font-size: 1.5rem; color: var(--burnt-orange); flex-shrink: 0; line-height: 1; margin-top: 3px; }
+    .conf-year-badge {
+      display: inline-block; font-size: 0.66rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      background: var(--burnt-orange); color: var(--cream);
+      padding: 2px 8px; border-radius: 999px; margin-bottom: 0.3rem;
+    }
+    .conf-item strong { display: block; color: var(--warm-brown); font-size: 0.88rem; margin-bottom: 0.2rem; }
+    .conf-item div { font-size: 0.8rem; color: #666; line-height: 1.65; }
+    .conf-sub-heading {
+      font-family: var(--font-display); font-size: 1.3rem;
+      color: var(--burnt-orange); margin-bottom: 1rem;
+      padding-bottom: 0.3rem; border-bottom: 2px solid var(--mustard);
+    }
+
+    /* ===== SERVICE ===== */
+    #service { background: var(--warm-brown); }
+    #service .section-title { color: var(--mustard); text-shadow: 3px 3px 0 rgba(0,0,0,0.3); }
+    #service .section-title::after { background: linear-gradient(90deg, var(--mustard), var(--avocado)); }
+    #service .retro-decorator { color: var(--harvest-gold); }
+    .service-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.2rem; margin-top: 2.5rem;
+    }
+    .service-item {
+      background: rgba(255,255,255,0.08);
+      border: 2px solid var(--mustard); border-radius: 10px;
+      padding: 1.2rem;
+      transition: var(--transition-smooth);
+      display: flex; align-items: flex-start; gap: 0.8rem;
+    }
+    .service-item:hover { background: rgba(255,255,255,0.14); transform: translateY(-3px); }
+    .service-bullet { color: var(--mustard); font-size: 1.2rem; flex-shrink: 0; }
+    .service-item p { color: var(--cream); font-size: 0.85rem; line-height: 1.6; }
+    .service-item strong { color: var(--mustard); display: block; margin-bottom: 0.2rem; }
+
+    /* ===== PRODUCTION CREDITS ===== */
+    #productions {
+      background: linear-gradient(160deg, #1A0A00, #3D1C06 50%, var(--warm-brown) 100%);
+    }
+    #productions .section-title { color: var(--harvest-gold); text-shadow: 3px 3px 0 rgba(0,0,0,0.4); }
+    #productions .section-title::after { background: linear-gradient(90deg, var(--harvest-gold), var(--burnt-orange)); }
+    #productions .retro-decorator { color: var(--burnt-orange); font-size: 1.8rem; }
+    .productions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem; margin-top: 3rem;
+    }
+    .prod-card {
+      position: relative; border-radius: var(--card-radius);
+      overflow: hidden; border: 3px solid var(--harvest-gold);
+      background: var(--warm-brown); min-height: 210px;
+    }
+    .curtain {
+      position: absolute; top: 0; bottom: 0; width: 50%;
+      z-index: 2;
+      transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .curtain-left  { left: 0; transform-origin: left;
+      background: linear-gradient(135deg, #6B0000, #3A0000); }
+    .curtain-right { right: 0; transform-origin: right;
+      background: linear-gradient(225deg, #6B0000, #3A0000); }
+    .curtain::after {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(90deg, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 2px, transparent 2px, transparent 14px);
+    }
+    .prod-card:hover .curtain-left  { transform: translateX(-100%); }
+    .prod-card:hover .curtain-right { transform: translateX(100%); }
+    .prod-content { position: relative; z-index: 1; padding: 1.8rem; color: var(--cream); }
+    .prod-year {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--harvest-gold);
+      display: block; margin-bottom: 0.5rem;
+    }
+    .prod-title { font-family: var(--font-display); font-size: 1.2rem; color: var(--mustard); margin-bottom: 0.4rem; }
+    .prod-role  { font-weight: 700; color: var(--burnt-orange); font-size: 0.85rem; margin-bottom: 0.7rem; }
+    .prod-desc  { font-size: 0.84rem; line-height: 1.7; color: rgba(245,240,232,0.82); }
+    .prod-hover-hint {
+      position: absolute; bottom: 10px; right: 14px; z-index: 3;
+      font-size: 0.65rem; color: rgba(245,240,232,0.45);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .prod-card:hover .prod-hover-hint { opacity: 0; }
+
+    /* ===== SKILLS ===== */
+    #skills { background: var(--avocado); position: relative; overflow: hidden; }
+    #skills .section-title { color: var(--cream); text-shadow: 3px 3px 0 var(--warm-brown); }
+    #skills .section-title::after { background: linear-gradient(90deg, var(--cream), var(--mustard)); }
+    #skills .retro-decorator { color: var(--mustard); }
+    .lava-lamp-container {
+      position: absolute; inset: 0;
+      overflow: hidden; pointer-events: none;
+    }
+    .lava-blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(45px); opacity: 0.32;
+      mix-blend-mode: soft-light;
+    }
+    .blob-1 { width:300px;height:300px; background:var(--burnt-orange); animation: blobFloat1 10s ease-in-out infinite; }
+    .blob-2 { width:220px;height:220px; background:var(--mustard);      animation: blobFloat2 14s ease-in-out infinite; }
+    .blob-3 { width:260px;height:260px; background:var(--harvest-gold); animation: blobFloat3 12s ease-in-out infinite; }
+    .blob-4 { width:180px;height:180px; background:var(--cream);        animation: blobFloat4 8s ease-in-out infinite; }
+    .blob-5 { width:320px;height:320px; background:var(--warm-brown);   animation: blobFloat1 16s ease-in-out infinite reverse; }
+    @keyframes blobFloat1 {
+      0%,100% { transform: translate(5%, 75%) scale(1); }
+      33%      { transform: translate(65%, 8%) scale(1.2); }
+      66%      { transform: translate(35%, 50%) scale(0.9); }
+    }
+    @keyframes blobFloat2 {
+      0%,100% { transform: translate(75%, 15%) scale(1); }
+      50%      { transform: translate(8%, 75%) scale(1.3); }
+    }
+    @keyframes blobFloat3 {
+      0%,100% { transform: translate(45%, 55%) scale(1); }
+      40%      { transform: translate(85%, 5%) scale(0.85); }
+      70%      { transform: translate(15%, 35%) scale(1.15); }
+    }
+    @keyframes blobFloat4 {
+      0%,100% { transform: translate(3%, 3%) scale(1); }
+      60%      { transform: translate(88%, 88%) scale(1.4); }
+    }
+    .skills-layout {
+      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem; margin-top: 3rem;
+    }
+    .skill-group {
+      background: rgba(255,255,255,0.13);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: var(--card-radius);
+      padding: 1.6rem; border: 2px solid rgba(255,255,255,0.28);
+      transition: var(--transition-smooth);
+    }
+    .skill-group:hover { background: rgba(255,255,255,0.2); }
+    .skill-group-title {
+      font-family: var(--font-display);
+      font-size: 1rem; color: var(--mustard); margin-bottom: 1rem;
+    }
+    .skill-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-block; padding: 5px 13px;
+      border-radius: 999px; font-size: 0.76rem;
+      font-weight: 600; letter-spacing: 0.04em;
+      transition: var(--transition-smooth); cursor: default;
+    }
+    .chip:hover { transform: scale(1.1) rotate(-2deg); }
+    .chip-proficient { background: var(--burnt-orange); color: var(--cream); }
+    .chip-working    { background: var(--mustard); color: var(--warm-brown); }
+    .chip-platform   { background: var(--harvest-gold); color: var(--warm-brown); }
+    .chip-media      { background: var(--cream); color: var(--warm-brown); }
+    .chip-theatre    { background: var(--warm-brown); color: var(--cream); border: 1px solid var(--mustard); }
+    .skills-legend {
+      position: relative; z-index: 1;
+      display: flex; flex-wrap: wrap; gap: 0.8rem;
+      margin-top: 1.5rem; justify-content: center;
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: rgba(245,240,232,0.8); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    /* ===== AWARDS ===== */
+    #awards { background: var(--cream); }
+    .awards-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem; margin-top: 2.5rem;
+    }
+    .award-card {
+      background: white; border-radius: var(--card-radius);
+      padding: 1.5rem; border: 2px solid var(--mustard);
+      box-shadow: 4px 4px 0 var(--harvest-gold);
+      display: flex; gap: 1rem; align-items: flex-start;
+      transition: var(--transition-smooth);
+    }
+    .award-card:hover { transform: translate(-3px,-3px); box-shadow: 7px 7px 0 var(--harvest-gold); }
+    .award-icon { font-size: 2rem; flex-shrink: 0; }
+    .award-card h3 { font-family: var(--font-display); font-size: 1rem; color: var(--warm-brown); margin-bottom: 0.3rem; }
+    .award-card p  { font-size: 0.82rem; color: #666; line-height: 1.6; }
+    .memberships-row {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      justify-content: center; margin-top: 2.5rem;
+    }
+    .membership-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 10px 20px; border-radius: 999px;
+      background: var(--warm-brown); color: var(--mustard);
+      border: 2px solid var(--mustard);
+      font-size: 0.82rem; font-weight: 700;
+      box-shadow: 3px 3px 0 var(--burnt-orange);
+      transition: var(--transition-smooth);
+    }
+    .membership-badge:hover { transform: scale(1.05); box-shadow: 5px 5px 0 var(--burnt-orange); }
+
+    /* ===== CONTACT ===== */
+    #contact { background: var(--warm-brown); text-align: center; padding-bottom: 0; }
+    .contact-inner { padding: var(--section-pad) clamp(20px,8vw,120px) 3rem; }
+    #contact .section-title { color: var(--mustard); text-shadow: 3px 3px 0 rgba(0,0,0,0.3); }
+    #contact .section-title::after { background: linear-gradient(90deg, var(--mustard), var(--harvest-gold)); }
+    #contact .retro-decorator { color: var(--burnt-orange); }
+    .contact-tagline { color: rgba(245,240,232,0.8); margin: 1rem 0 2.5rem; font-size: 1.05rem; line-height: 1.7; }
+    .contact-links { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 3rem; }
+    .contact-btn {
+      display: inline-flex; align-items: center; gap: 0.5em;
+      padding: 14px 32px; background: transparent;
+      border: 3px solid var(--mustard); color: var(--mustard);
+      border-radius: 999px;
+      font-family: var(--font-body); font-weight: 700; font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      transition: var(--transition-smooth);
+      box-shadow: 4px 4px 0 var(--burnt-orange);
+      cursor: none;
+    }
+    .contact-btn:hover {
+      background: var(--mustard); color: var(--warm-brown);
+      box-shadow: 6px 6px 0 var(--burnt-orange);
+      transform: translate(-2px,-2px);
+    }
+    .contact-affiliations {
+      display: flex; flex-wrap: wrap; gap: 0.8rem;
+      justify-content: center; align-items: center;
+      color: rgba(245,240,232,0.45);
+      font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .contact-sunburst-wrap {
+      width: 180px; height: 180px;
+      margin: 0 auto 2.5rem; opacity: 0.18;
+    }
+    .contact-sunburst-wrap svg {
+      width: 100%; height: 100%;
+      animation: rotateSunburst 35s linear infinite reverse;
+    }
+    .groovy-footer {
+      background: rgba(0,0,0,0.25); padding: 1.2rem;
+      font-size: 0.76rem; color: rgba(245,240,232,0.4);
+      letter-spacing: 0.1em;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .timeline::before { left: 24px; }
+      .timeline-item, .timeline-item[data-side="right"] {
+        flex-direction: column; padding-left: 64px;
+      }
+      .timeline-dot { left: 24px; }
+      .timeline-card { width: 100%; }
+      .conf-columns { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 700px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .about-photo-frame { max-width: 260px; margin: 0 auto; }
+      .positions-grid, .pub-grid, .productions-grid, .skills-layout, .service-grid, .awards-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0;
+        background: rgba(92,58,30,0.98); padding: 12px 20px; gap: 4px; }
+      .nav-links.open { display: flex; }
+      .nav-toggle { display: block; }
+    }
+    @media (max-width: 480px) {
+      #cursor-dot, #cursor-glow { display: none; }
+      html { cursor: auto; }
+      .hero-name { font-size: clamp(2.5rem, 14vw, 4rem); }
+    }
+
+    /* ===== REDUCED MOTION ===== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Skip link -->
+  <a href="#about" class="skip-link">Skip to main content</a>
+
+  <!-- Custom cursor -->
+  <div id="cursor-dot" aria-hidden="true"></div>
+  <div id="cursor-glow" aria-hidden="true"></div>
+
+  <!-- Confetti canvas -->
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <!-- ===== NAV ===== -->
+  <nav id="main-nav" aria-label="Main navigation">
+    <div class="nav-logo">AB</div>
+    <ul class="nav-links" id="nav-links-list">
+      <li><a href="#about"        class="nav-link">About</a></li>
+      <li><a href="#education"    class="nav-link">Education</a></li>
+      <li><a href="#positions"    class="nav-link">Positions</a></li>
+      <li><a href="#publications" class="nav-link">Publications</a></li>
+      <li><a href="#conferences"  class="nav-link">Conferences</a></li>
+      <li><a href="#productions"  class="nav-link">Productions</a></li>
+      <li><a href="#skills"       class="nav-link">Skills</a></li>
+      <li><a href="#contact"      class="nav-link">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section id="hero" aria-label="Introduction">
+    <div class="sunburst-wrapper" aria-hidden="true">
+      <svg class="sunburst" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" id="hero-sunburst"></svg>
+    </div>
+    <div class="hero-orb orb-1" aria-hidden="true"></div>
+    <div class="hero-orb orb-2" aria-hidden="true"></div>
+    <div class="hero-orb orb-3" aria-hidden="true"></div>
+    <div class="hero-content">
+      <h1 class="hero-name" aria-label="Alyssa Barrack">
+        <span class="name-word">Alyssa</span>
+        <span class="name-word">Barrack</span>
+      </h1>
+      <p class="hero-tagline" id="typewriter-target" aria-live="polite"></p>
+      <div class="hero-links">
+        <a href="mailto:alyssa.barrack@ucf.edu" class="hero-btn">✉ Email Me</a>
+        <a href="https://scholar.google.com/citations?view_op=list_works&hl=en&hl=en&user=i48Z6NoAAAAJ"
+           target="_blank" rel="noopener noreferrer" class="hero-btn">&#128218; Google Scholar</a>
+      </div>
+    </div>
+    <div class="hero-scroll-hint" aria-hidden="true">
+      <span>Scroll down</span>
+      <span>&#8595;</span>
+    </div>
+  </section>
+
+  <!-- Wave: hero → about -->
+  <div class="wave-divider" style="background: linear-gradient(135deg,#C45C26,#D4A017);" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="wave-path" d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,20 1440,40 L1440,80 L0,80 Z" fill="#F5F0E8" opacity="0.4"/>
+      <path class="wave-path" d="M0,55 C240,15 480,65 720,45 C960,25 1200,65 1440,35 L1440,80 L0,80 Z" fill="#F5F0E8"/>
+    </svg>
+  </div>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about" class="reveal-section">
+    <div class="section-header">
+      <div class="retro-decorator" aria-hidden="true">✿ ✿ ✿</div>
+      <h2 class="section-title">About</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-photo-frame reveal-item from-left">
+        <div class="photo-inner">
+          <span class="photo-initial">AB</span>
+          <span class="photo-placeholder-text">Alyssa Barrack</span>
+        </div>
+        <div class="frame-corner fc-tl" aria-hidden="true"></div>
+        <div class="frame-corner fc-tr" aria-hidden="true"></div>
+        <div class="frame-corner fc-bl" aria-hidden="true"></div>
+        <div class="frame-corner fc-br" aria-hidden="true"></div>
+      </div>
+      <div class="about-text reveal-item from-right">
+        <p class="about-lead">
+          PhD candidate in Texts &amp; Technology at the University of Central Florida, bridging
+          dramaturgy, horror media studies, digital humanities, and artificial intelligence
+          in live performance.
+        </p>
+        <p>
+          A practicing dramaturg and theatre-maker, Alyssa serves as Dramaturgy Coordinator for
+          Theatre UCF's main season and Pegasus PlayLab while teaching stagecraft and dramaturgy
+          at Daytona State College. Her work spans the theoretical and the hands-on — from scenic
+          painting and stage lighting to scholarly analyses of horror genre tropes and
+          audience-centered zine dramaturgy.
+        </p>
+        <p>
+          She is an NEH Grant Fellow, Co-Chair for the ELO 2026 Conference Artistic Committee,
+          and a member of the Literary Managers and Dramaturgs of the Americas (LMDA) and
+          the Electronic Literature Organization (ELO).
+        </p>
+        <div class="about-tags">
+          <span class="about-tag">Dramaturgy</span>
+          <span class="about-tag">Digital Humanities</span>
+          <span class="about-tag">AI in Performance</span>
+          <span class="about-tag">Horror Studies</span>
+          <span class="about-tag">NEH Fellow</span>
+          <span class="about-tag">Theatre Design</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wave: about → education -->
+  <div class="wave-divider" style="background: var(--cream);" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="wave-path" d="M0,30 C300,70 600,10 900,50 C1080,70 1300,20 1440,45 L1440,80 L0,80 Z" fill="var(--warm-brown)" opacity="0.5"/>
+      <path class="wave-path" d="M0,55 C240,20 480,60 720,35 C960,10 1200,60 1440,30 L1440,80 L0,80 Z" fill="var(--warm-brown)"/>
+    </svg>
+  </div>
+
+  <!-- ===== EDUCATION ===== -->
+  <section id="education" class="reveal-section">
+    <div class="section-header">
+      <div class="retro-decorator" aria-hidden="true">☮ ☮ ☮</div>
+      <h2 class="section-title">Education</h2>
+    </div>
+    <div class="timeline">
+
+      <div class="timeline-item reveal-item from-left" data-side="left">
+        <div class="timeline-dot" aria-hidden="true">🎓</div>
+        <div class="timeline-card">
+          <span class="timeline-year">2024 – Present</span>
+          <h3 class="timeline-degree">PhD in Texts &amp; Technology</h3>
+          <p class="timeline-school">University of Central Florida</p>
+          <ul class="timeline-details">
+            <li>Advisor: Julia Listengarten</li>
+            <li>Graduate Research Associate &amp; Teaching Associate</li>
+            <li>Knights Research Scholar Program Team Leader</li>
+            <li>College of Arts &amp; Humanities</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item reveal-item from-right" data-side="right">
+        <div class="timeline-dot" aria-hidden="true">📚</div>
+        <div class="timeline-card">
+          <span class="timeline-year">2020 – 2022</span>
+          <h3 class="timeline-degree">MA in Interdisciplinary Studies</h3>
+          <p class="timeline-school">University of Central Florida</p>
+          <ul class="timeline-details">
+            <li>Advisor: Elizabeth Kritzer</li>
+            <li>Thesis: <em>Hitting a Little Too Close to Home: Reflexivity, Liminality, and Identification in Horror across Film, Theatre, and Games</em></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item reveal-item from-left" data-side="left">
+        <div class="timeline-dot" aria-hidden="true">🏆</div>
+        <div class="timeline-card">
+          <span class="timeline-year">2015 – 2019</span>
+          <h3 class="timeline-degree">BA in Theatre Arts &amp; English</h3>
+          <p class="timeline-school">University of South Florida</p>
+          <ul class="timeline-details">
+            <li>Dual Degree — 3.96 GPA</li>
+            <li>English: Professional Writing, Rhetoric &amp; Technology</li>
+            <li>Honors College &amp; Departmental Honors</li>
+            <li>Study abroad experience</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Wave: education → positions -->
+  <div class="wave-divider" style="background: var(--warm-brown);" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="wave-path" d="M0,50 C200,20 440,70 720,40 C1000,10 1200,60 1440,30 L1440,80 L0,80 Z" fill="var(--cream)" opacity="0.5"/>
+      <path class="wave-path" d="M0,35 C300,65 600,15 900,55 C1100,80 1320,30 1440,50 L1440,80 L0,80 Z" fill="var(--cream)"/>
+    </svg>
+  </div>
+
+  <!-- ===== ACADEMIC POSITIONS ===== -->
+  <section id="positions" class="reveal-section">
+    <div class="section-header">
+      <div class="retro-decorator" aria-hidden="true">★ ★ ★</div>
+      <h2 class="section-title">Academic Positions</h2>
+    </div>
+    <div class="positions-grid">
+
+      <article class="position-card reveal-item from-below">
+        <div class="card-accent" aria-hidden="true"></div>
+        <span class="card-tag">2024 – Present</span>
+        <h3>NEH Grant Fellow</h3>
+        <p class="card-org">National Endowment for the Humanities</p>
+        <p>Selected fellow for national endowment project on AI in education at UCF — researching the intersection of artificial intelligence and pedagogy.</p>
+      </article>
+
+      <article class="position-card reveal-item from-below">
+        <div class="card-accent" aria-hidden="true"></div>
+        <span class="card-tag">May 2025 – Present</span>
+        <h3>Graduate Research Associate</h3>
+        <p class="card-org">Theatre UCF</p>
+        <p>Dramaturgy Coordinator for UCF Main Season and Pegasus PlayLab (2025–2027). Instructor of Record for THE 4481 Dramaturgy, TPA 3523 New Play Festival, and TPA 3513 Season Selection.</p>
+      </article>
+
+      <article class="position-card reveal-item from-below">
+        <div class="card-accent" aria-hidden="true"></div>
+        <span class="card-tag">2025 – 2026</span>
+        <h3>Co-Chair, Artistic Committee</h3>
+        <p class="card-org">ELO 2026 Conference</p>
+        <p>Co-chaired Exhibitions &amp; Performance Review for the Electronic Literature Organization 2026 Conference. Also serving as Conference Reviewer.</p>
+      </article>
+
+      <article class="position-card reveal-item from-below">
+        <div class="card-accent" aria-hidden="true"></div>
+        <span class="card-tag">2025 – 2026</span>
+        <h3>Secretary &amp; Re-Founding Member</h3>
+        <p class="card-org">Texts &amp; Technology Student Organization (TTSO), UCF</p>
+        <p>Helped re-establish the TTSO and serves as Secretary for 2025–2026 academic year.</p>
+      </article>
+
+      <article class="position-card reveal-item from-below">
+        <div class="card-accent" aria-hidden="true"></div>
+        <span class="card-tag">Aug 2024 – May 2025</span>
+        <h3>Graduate Research Associate</h3>
+        <p class="card-org">Center for Humanities &amp; Digital Research, UCF</p>
+        <p>Digital Production Assistant for the <em>Marjorie Kinnan Rawlings Journal of Florida Literature</em>.</p>
+      </article>
+
+      <article class="position-card reveal-item from-below">
+        <div class="card-accent" aria-hidden="true"></div>
+        <span class="card-tag">Aug 2024 – May 2025</span>
+        <h3>Graduate Teaching Assistant</h3>
+        <p class="card-org">Nicholson School of Communication &amp; Media, UCF</p>
+        <p>Teaching assistant supporting communications and media courses.</p>
+      </article>
+
+      <article class="position-card reveal-item from-below">
+        <div class="card-accent" aria-hidden="true"></div>
+        <span class="card-tag">Jan 2024 – 2026</span>
+        <h3>Adjunct Professor</h3>
+        <p class="card-org">Daytona State College</p>
+        <p>Teaching Stagecraft and Theatre Appreciation. Event Manager at News Journal Center for Performing Arts (July 2023–Sept 2024); Contract Event Manager Oct 2024–present.</p>
+      </article>
+
+      <article class="position-card reveal-item from-below">
+        <div class="card-accent" aria-hidden="true"></div>
+        <span class="card-tag">Aug 2023 – Present</span>
+        <h3>Theatrical Designer &amp; Artist</h3>
+        <p class="card-org">Eastern Florida State College</p>
+        <p>Lighting design &amp; ETC console programming, scenic artistry and painting. Previously Theatre Technician 2019–2023.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- Wave: positions → publications -->
+  <div class="wave-divider" style="background: var(--cream);" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="wave-path" d="M0,45 C240,10 480,70 720,40 C960,10 1200,70 1440,40 L1440,80 L0,80 Z" fill="#3D1C06" opacity="0.6"/>
+      <path class="wave-path" d="M0,60 C180,30 360,65 540,45 C720,25 900,65 1080,40 C1260,15 1380,55 1440,35 L1440,80 L0,80 Z" fill="#3D1C06"/>
+    </svg>
+  </div>
+
+  <!-- ===== PUBLICATIONS ===== -->
+  <section id="publications" class="reveal-section">
+    <div class="section-header">
+      <div class="retro-decorator" aria-hidden="true">✦ ✦ ✦</div>
+      <h2 class="section-title">Publications</h2>
+    </div>
+
+    <h3 class="pub-category-label">Published Work</h3>
+    <div class="pub-grid">
+
+      <div class="flip-card reveal-item from-below" tabindex="0" role="button"
+           aria-label="The Drolls: A Dramaturgical Mini-Zine Program — click to see citation">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <div>
+              <span class="pub-type-badge">Article / Zine</span>
+              <h4>"The Drolls: A Dramaturgical Mini-Zine Program"</h4>
+            </div>
+            <div>
+              <p class="pub-venue">Academizines / Unbound: A Journal of Digital Scholarship</p>
+              <p class="pub-year">2026</p>
+              <p class="flip-hint">Click to flip ↻</p>
+            </div>
+          </div>
+          <div class="flip-back">
+            <span class="pub-type-badge">Article / Zine</span>
+            <p><strong>Barrack, Alyssa.</strong> "The Drolls: A Dramaturgical Mini-Zine Program."</p>
+            <p>In <em>Academizines: A Special Issue of Unbound: A Journal of Digital Scholarship.</em></p>
+            <p>Eds. Dr. Spencer Keralis &amp; Professor Zach Frazier. (2026).</p>
+            <p class="pub-keywords">Keywords: Dramaturgy, Zine Scholarship, Audience-Centered Practice</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card reveal-item from-below" tabindex="0" role="button"
+           aria-label="Devising With the Machine — click to see citation">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <div>
+              <span class="pub-type-badge">Book Chapter</span>
+              <h4>"Devising With the Machine: Artificial Intelligence and Human Creativity in Performance"</h4>
+            </div>
+            <div>
+              <p class="pub-venue">Sentient Books: AI's Impact on Creation</p>
+              <p class="pub-year">2025</p>
+              <p class="flip-hint">Click to flip ↻</p>
+            </div>
+          </div>
+          <div class="flip-back">
+            <span class="pub-type-badge">Book Chapter</span>
+            <p><strong>Listengarten, Julia, Chloe Edmonson, and Alyssa Barrack.</strong></p>
+            <p>"Devising With the Machine: Artificial Intelligence and Human Creativity in Performance."</p>
+            <p>In <em>Sentient Books: AI's Impact on Creation.</em> (2025).</p>
+            <p class="pub-keywords">Keywords: AI, Devised Theatre, Performance, Human Creativity</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card reveal-item from-below" tabindex="0" role="button"
+           aria-label="MA Thesis — click to see citation">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <div>
+              <span class="pub-type-badge">MA Thesis</span>
+              <h4><em>Hitting a Little Too Close to Home: Reflexivity, Liminality, and Identification in Horror</em></h4>
+            </div>
+            <div>
+              <p class="pub-venue">UCF STARS Repository</p>
+              <p class="pub-year">2022</p>
+              <p class="flip-hint">Click to flip ↻</p>
+            </div>
+          </div>
+          <div class="flip-back">
+            <span class="pub-type-badge">MA Thesis</span>
+            <p><strong>Barrack, Alyssa.</strong> <em>Hitting a Little Too Close to Home: Reflexivity, Liminality, and Identification in Horror across Film, Theatre, and Games.</em></p>
+            <p>University of Central Florida. UCF STARS Repository. (2022).</p>
+            <p class="pub-keywords">Keywords: Horror Genre, Reflexivity, Liminality, Identification</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <h3 class="pub-category-label">Book Reviews</h3>
+    <div class="pub-grid">
+
+      <div class="flip-card reveal-item from-below" tabindex="0" role="button"
+           aria-label="Book review: Decentered Playwriting — click to see citation">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <div>
+              <span class="pub-type-badge">Book Review</span>
+              <h4>Review of <em>Decentered Playwriting: Alternative Techniques for the Stage</em></h4>
+            </div>
+            <div>
+              <p class="pub-venue">LMDA Review</p>
+              <p class="pub-year">2024</p>
+              <p class="flip-hint">Click to flip ↻</p>
+            </div>
+          </div>
+          <div class="flip-back">
+            <span class="pub-type-badge">Book Review</span>
+            <p><strong>Barrack, Alyssa.</strong> Review of <em>Decentered Playwriting: Alternative Techniques for the Stage.</em></p>
+            <p><em>LMDA Review.</em> Literary Managers and Dramaturgs of the Americas. (2024).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card reveal-item from-below" tabindex="0" role="button"
+           aria-label="Book review: Antonin Artaud — click to see citation">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <div>
+              <span class="pub-type-badge">Book Review</span>
+              <h4>Review of <em>Antonin Artaud</em> by Blake Morris</h4>
+            </div>
+            <div>
+              <p class="pub-venue">Ecumenica</p>
+              <p class="pub-year">2022</p>
+              <p class="flip-hint">Click to flip ↻</p>
+            </div>
+          </div>
+          <div class="flip-back">
+            <span class="pub-type-badge">Book Review</span>
+            <p><strong>Barrack, Alyssa.</strong> Review of <em>Antonin Artaud</em> by Blake Morris.</p>
+            <p><em>Ecumenica</em> Journal of Theatre and Performance. (2022).</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <h3 class="pub-category-label">Creative Publications</h3>
+    <div class="pub-grid">
+
+      <div class="flip-card reveal-item from-below" tabindex="0" role="button"
+           aria-label="Intricate Bloody Parodies — click to see citation">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <div>
+              <span class="pub-type-badge">Essay</span>
+              <h4>"Intricate Bloody Parodies: Vampiric Allusions in <em>What We Do in the Shadows</em>"</h4>
+            </div>
+            <div>
+              <p class="pub-venue">Horror Scholar Journal, Vol. 3</p>
+              <p class="pub-year">2020</p>
+              <p class="flip-hint">Click to flip ↻</p>
+            </div>
+          </div>
+          <div class="flip-back">
+            <span class="pub-type-badge">Essay</span>
+            <p><strong>Barrack, Alyssa.</strong> "Intricate Bloody Parodies: Vampiric Allusions in <em>What We Do in the Shadows.</em>"</p>
+            <p><em>Horror Scholar Journal,</em> Vol. 3. (2020).</p>
+            <p class="pub-keywords">Keywords: Vampire Media, Parody, Horror Comedy</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card reveal-item from-below" tabindex="0" role="button"
+           aria-label="Recognizing Queerness in The Craft: Legacy — click to see citation">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <div>
+              <span class="pub-type-badge">Essay</span>
+              <h4>"Recognizing Queerness and Self in <em>The Craft: Legacy</em>"</h4>
+            </div>
+            <div>
+              <p class="pub-venue">Gayly Dreadful</p>
+              <p class="pub-year">2021</p>
+              <p class="flip-hint">Click to flip ↻</p>
+            </div>
+          </div>
+          <div class="flip-back">
+            <span class="pub-type-badge">Essay</span>
+            <p><strong>Barrack, Alyssa.</strong> "Recognizing Queerness and Self in <em>The Craft: Legacy.</em>"</p>
+            <p><em>Gayly Dreadful.</em> (2021).</p>
+            <p class="pub-keywords">Keywords: Queer Horror, Witchcraft, Identity, Legacy Sequel</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <h3 class="pub-category-label">Works in Progress</h3>
+    <div class="pub-grid">
+
+      <div class="flip-card reveal-item from-below" tabindex="0" role="button"
+           aria-label="American Psycho adaptations work in progress">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <div>
+              <span class="pub-type-badge">In Progress</span>
+              <h4>"Adapting Controversy: Audience Discourse in American Psycho Adaptations"</h4>
+            </div>
+            <div>
+              <p class="pub-venue">Work in Progress</p>
+              <p class="flip-hint">Click to flip ↻</p>
+            </div>
+          </div>
+          <div class="flip-back">
+            <span class="pub-type-badge">In Progress</span>
+            <p>"Adapting Controversy: Audience Discourse in American Psycho Adaptations."</p>
+            <p>Examining how audience reactions shift across film, musical, and theatrical adaptations of contested source material.</p>
+            <p class="pub-keywords">Keywords: Adaptation Studies, Audience Reception, Controversy</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card reveal-item from-below" tabindex="0" role="button"
+           aria-label="Cozy Horror work in progress">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <div>
+              <span class="pub-type-badge">In Progress</span>
+              <h4>"Identifying Shared Characteristics of Cozy Horror Media"</h4>
+            </div>
+            <div>
+              <p class="pub-venue">Work in Progress</p>
+              <p class="flip-hint">Click to flip ↻</p>
+            </div>
+          </div>
+          <div class="flip-back">
+            <span class="pub-type-badge">In Progress</span>
+            <p>"Identifying Shared Characteristics of Cozy Horror Media."</p>
+            <p>Developing a framework for the emerging cozy horror genre — horror texts that prioritize comfort, community, and warmth alongside fear.</p>
+            <p class="pub-keywords">Keywords: Genre Studies, Cozy Horror, Media Analysis</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Wave: publications → conferences -->
+  <div class="wave-divider" style="background: #3D1C06;" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="wave-path" d="M0,40 C360,10 720,70 1080,35 C1260,18 1380,55 1440,40 L1440,80 L0,80 Z" fill="var(--cream)" opacity="0.5"/>
+      <path class="wave-path" d="M0,55 C200,80 400,25 600,50 C800,75 1000,20 1200,50 C1340,70 1400,40 1440,55 L1440,80 L0,80 Z" fill="var(--cream)"/>
+    </svg>
+  </div>
+
+  <!-- ===== CONFERENCES ===== -->
+  <section id="conferences" class="reveal-section">
+    <div class="section-header">
+      <div class="retro-decorator" aria-hidden="true">☯ ☯ ☯</div>
+      <h2 class="section-title">Conferences</h2>
+    </div>
+    <div class="conf-columns">
+      <ul class="conf-list" aria-label="Conference presentations">
+
+        <li class="conf-item reveal-item from-left">
+          <span class="conf-bullet" aria-hidden="true">✿</span>
+          <div>
+            <span class="conf-year-badge">June 2026</span>
+            <strong>"Dramaturgy Across Space &amp; Civic Dramaturgy"</strong>
+            Working Group — LMDA 40th Annual Retreat, David Geffen Yale School of Drama, New Haven, CT
+          </div>
+        </li>
+
+        <li class="conf-item reveal-item from-left">
+          <span class="conf-bullet" aria-hidden="true">✿</span>
+          <div>
+            <span class="conf-year-badge">May 2026</span>
+            <strong>"The Drolls: A Dramaturgical Mini-Zine"</strong>
+            Academizines! Launch Event &amp; Virtual Zine Con, Virtual
+          </div>
+        </li>
+
+        <li class="conf-item reveal-item from-left">
+          <span class="conf-bullet" aria-hidden="true">✿</span>
+          <div>
+            <span class="conf-year-badge">April 2026</span>
+            <strong>"Experimental Interactive Dramaturgy: Digital Methods for Production Dramaturgy on <em>The River Bride</em>"</strong>
+            UCF Libraries AI Day 2026 &amp; UCF Creative Scholarship Showcase (March 2026), UCF
+          </div>
+        </li>
+
+        <li class="conf-item reveal-item from-left">
+          <span class="conf-bullet" aria-hidden="true">✿</span>
+          <div>
+            <span class="conf-year-badge">June 2025</span>
+            <strong>"AI Discourse through Horror Genre Trope Identification"</strong>
+            Console-ing Passions, Atlanta, Georgia
+          </div>
+        </li>
+
+        <li class="conf-item reveal-item from-left">
+          <span class="conf-bullet" aria-hidden="true">✿</span>
+          <div>
+            <span class="conf-year-badge">Feb 2021</span>
+            <strong>"Nordic Death is Not Dichotomous: Depictions of Nordic Afterlife in <em>Jotun</em> and <em>Hellblade</em>"</strong>
+            SWPACA, Virtual
+          </div>
+        </li>
+
+      </ul>
+
+      <div class="conf-local-talks">
+        <h3 class="conf-sub-heading">Local Talks</h3>
+        <ul class="conf-list" aria-label="Local talks">
+
+          <li class="conf-item reveal-item from-right">
+            <span class="conf-bullet" aria-hidden="true">✦</span>
+            <div>
+              <span class="conf-year-badge">Apr 2026</span>
+              <strong>"New Play Dramaturgy Bootcamp"</strong>
+              with Dr. Tracey Brent-Chessum, UCF
+            </div>
+          </li>
+
+          <li class="conf-item reveal-item from-right">
+            <span class="conf-bullet" aria-hidden="true">✦</span>
+            <div>
+              <span class="conf-year-badge">Apr 22–23, 2026</span>
+              <strong>"Production Dramaturgy Bootcamp"</strong>
+              with Dr. Tracey Brent-Chessum, UCF
+            </div>
+          </li>
+
+          <li class="conf-item reveal-item from-right">
+            <span class="conf-bullet" aria-hidden="true">✦</span>
+            <div>
+              <span class="conf-year-badge">Dec 2024</span>
+              <strong>"Cult Adaptation and American Psycho"</strong>
+              DCRG Presents, UCF
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wave: conferences → service -->
+  <div class="wave-divider" style="background: var(--cream);" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="wave-path" d="M0,30 C240,70 480,10 720,50 C960,80 1200,20 1440,50 L1440,80 L0,80 Z" fill="var(--warm-brown)" opacity="0.5"/>
+      <path class="wave-path" d="M0,55 C360,20 720,65 1080,30 C1260,10 1380,50 1440,40 L1440,80 L0,80 Z" fill="var(--warm-brown)"/>
+    </svg>
+  </div>
+
+  <!-- ===== SERVICE ===== -->
+  <section id="service" class="reveal-section">
+    <div class="section-header">
+      <div class="retro-decorator" aria-hidden="true">❋ ❋ ❋</div>
+      <h2 class="section-title">Professional Service</h2>
+    </div>
+    <div class="service-grid">
+
+      <div class="service-item reveal-item from-below">
+        <span class="service-bullet" aria-hidden="true">✦</span>
+        <p><strong>Co-Chair, Exhibitions &amp; Performances</strong>ELO Conference 2026</p>
+      </div>
+      <div class="service-item reveal-item from-below">
+        <span class="service-bullet" aria-hidden="true">✦</span>
+        <p><strong>Conference Reviewer</strong>ELO Conference 2026</p>
+      </div>
+      <div class="service-item reveal-item from-below">
+        <span class="service-bullet" aria-hidden="true">✦</span>
+        <p><strong>Conference Reviewer</strong>ACH Conference (2025–2026)</p>
+      </div>
+      <div class="service-item reveal-item from-below">
+        <span class="service-bullet" aria-hidden="true">✦</span>
+        <p><strong>Peer Reviewer</strong>UCF Pegasus Review 2025</p>
+      </div>
+      <div class="service-item reveal-item from-below">
+        <span class="service-bullet" aria-hidden="true">✦</span>
+        <p><strong>Volunteer</strong>Florida Digital Humanities Consortium Conference (2024)</p>
+      </div>
+      <div class="service-item reveal-item from-below">
+        <span class="service-bullet" aria-hidden="true">✦</span>
+        <p><strong>Knights Research Scholar Program Team Leader</strong>UCF — Spring &amp; Fall 2026</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Wave: service → productions -->
+  <div class="wave-divider" style="background: var(--warm-brown);" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="wave-path" d="M0,50 C200,20 400,70 600,40 C800,10 1100,65 1440,35 L1440,80 L0,80 Z" fill="#1A0A00" opacity="0.6"/>
+      <path class="wave-path" d="M0,35 C360,70 720,15 1080,55 C1260,75 1380,30 1440,45 L1440,80 L0,80 Z" fill="#1A0A00"/>
+    </svg>
+  </div>
+
+  <!-- ===== PRODUCTION CREDITS ===== -->
+  <section id="productions" class="reveal-section">
+    <div class="section-header">
+      <div class="retro-decorator" aria-hidden="true">🎭</div>
+      <h2 class="section-title">Production Credits</h2>
+    </div>
+    <div class="productions-grid">
+
+      <div class="prod-card reveal-item from-below">
+        <div class="curtain curtain-left" aria-hidden="true"></div>
+        <div class="curtain curtain-right" aria-hidden="true"></div>
+        <div class="prod-content">
+          <span class="prod-year">UCF — 2026</span>
+          <h3 class="prod-title">Pegasus PlayLab 2026: <em>Raccoon Play</em></h3>
+          <p class="prod-role">Dramaturgy Coordinator &amp; Dramaturg</p>
+          <p class="prod-desc">Coordinated full dramaturgy documentation, research, and lobby materials for the new play festival production.</p>
+        </div>
+        <span class="prod-hover-hint" aria-hidden="true">hover to reveal ↑</span>
+      </div>
+
+      <div class="prod-card reveal-item from-below">
+        <div class="curtain curtain-left" aria-hidden="true"></div>
+        <div class="curtain curtain-right" aria-hidden="true"></div>
+        <div class="prod-content">
+          <span class="prod-year">UCF — 2026</span>
+          <h3 class="prod-title">Celebrates the Arts 2026: <em>An AI Adventure</em></h3>
+          <p class="prod-role">Devised Production — Lead Dramaturg</p>
+          <p class="prod-desc">Led a team of 10 student dramaturgs in creating a devised performance exploring artificial intelligence through ensemble storytelling.</p>
+        </div>
+        <span class="prod-hover-hint" aria-hidden="true">hover to reveal ↑</span>
+      </div>
+
+      <div class="prod-card reveal-item from-below">
+        <div class="curtain curtain-left" aria-hidden="true"></div>
+        <div class="curtain curtain-right" aria-hidden="true"></div>
+        <div class="prod-content">
+          <span class="prod-year">UCF Theatre — 2025</span>
+          <h3 class="prod-title"><em>The River Bride</em></h3>
+          <p class="prod-role">Dramaturg</p>
+          <p class="prod-desc">Served as production dramaturg for Marisela Treviño Orta's <em>The River Bride</em>, UCF Main Season. Developed digital interactive dramaturgy materials.</p>
+        </div>
+        <span class="prod-hover-hint" aria-hidden="true">hover to reveal ↑</span>
+      </div>
+
+      <div class="prod-card reveal-item from-below">
+        <div class="curtain curtain-left" aria-hidden="true"></div>
+        <div class="curtain curtain-right" aria-hidden="true"></div>
+        <div class="prod-content">
+          <span class="prod-year">UCF — 2025</span>
+          <h3 class="prod-title">Pegasus PlayLab 2025: <em>The Drolls</em></h3>
+          <p class="prod-role">Dramaturgy Coordinator &amp; Dramaturg</p>
+          <p class="prod-desc">Produced the award-winning dramaturgical mini-zine program that was later published in <em>Academizines.</em></p>
+        </div>
+        <span class="prod-hover-hint" aria-hidden="true">hover to reveal ↑</span>
+      </div>
+
+      <div class="prod-card reveal-item from-below">
+        <div class="curtain curtain-left" aria-hidden="true"></div>
+        <div class="curtain curtain-right" aria-hidden="true"></div>
+        <div class="prod-content">
+          <span class="prod-year">UCF — 2025</span>
+          <h3 class="prod-title">Celebrates the Arts 2025: <em>Late Night with AI</em></h3>
+          <p class="prod-role">Devised Production — Actor &amp; Collaborator</p>
+          <p class="prod-desc">Participated as actor and co-creator in a devised production exploring artificial intelligence in a late-night talk show format.</p>
+        </div>
+        <span class="prod-hover-hint" aria-hidden="true">hover to reveal ↑</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Wave: productions → skills -->
+  <div class="wave-divider" style="background: #1A0A00;" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="wave-path" d="M0,45 C300,10 600,70 900,35 C1100,10 1300,55 1440,30 L1440,80 L0,80 Z" fill="var(--avocado)" opacity="0.5"/>
+      <path class="wave-path" d="M0,60 C240,30 480,65 720,40 C960,15 1200,60 1440,35 L1440,80 L0,80 Z" fill="var(--avocado)"/>
+    </svg>
+  </div>
+
+  <!-- ===== SKILLS ===== -->
+  <section id="skills" class="reveal-section">
+    <div class="lava-lamp-container" aria-hidden="true">
+      <div class="lava-blob blob-1"></div>
+      <div class="lava-blob blob-2"></div>
+      <div class="lava-blob blob-3"></div>
+      <div class="lava-blob blob-4"></div>
+      <div class="lava-blob blob-5"></div>
+    </div>
+    <div class="section-header">
+      <div class="retro-decorator" aria-hidden="true">◎ ◎ ◎</div>
+      <h2 class="section-title">Skills &amp; Competencies</h2>
+    </div>
+    <div class="skills-layout">
+
+      <div class="skill-group reveal-item from-below">
+        <h3 class="skill-group-title">Digital &amp; Programming</h3>
+        <div class="skill-chips">
+          <span class="chip chip-proficient" title="Proficient">HTML</span>
+          <span class="chip chip-proficient" title="Proficient">Markdown</span>
+          <span class="chip chip-proficient" title="Proficient">p5.js</span>
+          <span class="chip chip-proficient" title="Proficient">Tracery</span>
+          <span class="chip chip-proficient" title="Proficient">GitHub</span>
+          <span class="chip chip-proficient" title="Proficient">JSON</span>
+          <span class="chip chip-proficient" title="Proficient">CSV</span>
+          <span class="chip chip-working"    title="Working Knowledge">Python</span>
+          <span class="chip chip-working"    title="Working Knowledge">JavaScript</span>
+          <span class="chip chip-working"    title="Working Knowledge">TensorFlow</span>
+          <span class="chip chip-working"    title="Working Knowledge">ChatGPT API</span>
+        </div>
+      </div>
+
+      <div class="skill-group reveal-item from-below">
+        <h3 class="skill-group-title">Platforms</h3>
+        <div class="skill-chips">
+          <span class="chip chip-platform">Wix</span>
+          <span class="chip chip-platform">WordPress</span>
+          <span class="chip chip-platform">Instructure Canvas</span>
+        </div>
+      </div>
+
+      <div class="skill-group reveal-item from-below">
+        <h3 class="skill-group-title">Media &amp; Design</h3>
+        <div class="skill-chips">
+          <span class="chip chip-media">Canva</span>
+          <span class="chip chip-media">Adobe InDesign</span>
+          <span class="chip chip-media">Adobe Premiere</span>
+          <span class="chip chip-media">Archivist Film Scanner</span>
+          <span class="chip chip-media">8mm / Super 8mm / 16mm</span>
+        </div>
+      </div>
+
+      <div class="skill-group reveal-item from-below">
+        <h3 class="skill-group-title">Theatrical &amp; Production</h3>
+        <div class="skill-chips">
+          <span class="chip chip-theatre">Scenic Carpentry &amp; Painting</span>
+          <span class="chip chip-theatre">Stage Lighting</span>
+          <span class="chip chip-theatre">ETC Console Programming</span>
+          <span class="chip chip-theatre">Technical Direction</span>
+          <span class="chip chip-theatre">QLab</span>
+          <span class="chip chip-theatre">Event Coordination</span>
+          <span class="chip chip-theatre">House Management</span>
+          <span class="chip chip-theatre">Professional Writing &amp; Editing</span>
+          <span class="chip chip-theatre">Transcription &amp; Data Entry</span>
+        </div>
+      </div>
+
+    </div>
+    <div class="skills-legend" aria-label="Legend">
+      <span class="legend-item"><span class="legend-dot" style="background:var(--burnt-orange)"></span>Proficient</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--mustard)"></span>Working Knowledge</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--harvest-gold)"></span>Platforms</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--cream)"></span>Media &amp; Design</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--warm-brown)"></span>Theatrical</span>
+    </div>
+  </section>
+
+  <!-- Wave: skills → awards -->
+  <div class="wave-divider" style="background: var(--avocado);" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="wave-path" d="M0,40 C300,70 600,15 900,55 C1080,75 1300,25 1440,45 L1440,80 L0,80 Z" fill="var(--cream)" opacity="0.5"/>
+      <path class="wave-path" d="M0,55 C240,20 480,70 720,40 C960,10 1200,65 1440,30 L1440,80 L0,80 Z" fill="var(--cream)"/>
+    </svg>
+  </div>
+
+  <!-- ===== AWARDS & MEMBERSHIPS ===== -->
+  <section id="awards" class="reveal-section">
+    <div class="section-header">
+      <div class="retro-decorator" aria-hidden="true">✪ ✪ ✪</div>
+      <h2 class="section-title">Awards &amp; Memberships</h2>
+    </div>
+    <div class="awards-grid">
+
+      <div class="award-card reveal-item from-left">
+        <span class="award-icon" aria-hidden="true">🏅</span>
+        <div>
+          <h3>UCF Graduate Presentation Fellowship</h3>
+          <p>Summer 2025 — competitive fellowship supporting graduate student research presentations.</p>
+        </div>
+      </div>
+
+      <div class="award-card reveal-item from-right">
+        <span class="award-icon" aria-hidden="true">🎓</span>
+        <div>
+          <h3>Debbie K. Phillis Space Coast UCF Alumni Chapter Endowed Scholarship</h3>
+          <p>2025–2026 — endowed scholarship recognizing academic excellence.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="memberships-row">
+      <span class="membership-badge reveal-item from-below">✦ Literary Managers &amp; Dramaturgs of the Americas (LMDA)</span>
+      <span class="membership-badge reveal-item from-below">✦ Electronic Literature Organization (ELO)</span>
+      <span class="membership-badge reveal-item from-below">✦ ACM SIGCHI</span>
+    </div>
+  </section>
+
+  <!-- Wave: awards → contact -->
+  <div class="wave-divider" style="background: var(--cream);" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="wave-path" d="M0,35 C300,70 600,10 900,50 C1100,75 1300,25 1440,45 L1440,80 L0,80 Z" fill="var(--warm-brown)" opacity="0.5"/>
+      <path class="wave-path" d="M0,55 C200,25 440,65 720,35 C1000,5 1200,60 1440,30 L1440,80 L0,80 Z" fill="var(--warm-brown)"/>
+    </svg>
+  </div>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="contact" class="reveal-section">
+    <div class="contact-sunburst-wrap" aria-hidden="true">
+      <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" id="contact-sunburst"></svg>
+    </div>
+    <div class="contact-inner">
+      <div class="section-header">
+        <div class="retro-decorator" aria-hidden="true">✿ ☮ ✿</div>
+        <h2 class="section-title">Get In Touch</h2>
+      </div>
+      <p class="contact-tagline">
+        Collaboration, research inquiries, dramaturgy consultations —<br>all welcome.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:alyssa.barrack@ucf.edu" class="contact-btn">
+          <span aria-hidden="true">✉</span> alyssa.barrack@ucf.edu
+        </a>
+        <a href="https://scholar.google.com/citations?view_op=list_works&hl=en&hl=en&user=i48Z6NoAAAAJ"
+           target="_blank" rel="noopener noreferrer" class="contact-btn">
+          <span aria-hidden="true">📚</span> Google Scholar
+        </a>
+      </div>
+      <div class="contact-affiliations">
+        <span>UCF Texts &amp; Technology PhD</span>
+        <span aria-hidden="true">✦</span>
+        <span>LMDA Member</span>
+        <span aria-hidden="true">✦</span>
+        <span>ELO Member</span>
+        <span aria-hidden="true">✦</span>
+        <span>NEH Fellow</span>
+        <span aria-hidden="true">✦</span>
+        <span>Theatre UCF Dramaturg</span>
+      </div>
+    </div>
+    <footer class="groovy-footer">
+      <p>Alyssa Barrack &copy; 2026 &nbsp;✿&nbsp; Dramaturg &bull; Researcher &bull; Digital Humanist</p>
+    </footer>
+  </section>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+  (function() {
+    'use strict';
+
+    // ---- 1. Build Sunbursts ----
+    function buildSunburst(svgId) {
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const svg = document.getElementById(svgId);
+      if (!svg) return;
+      const g = document.createElementNS(svgNS, 'g');
+      g.setAttribute('transform', 'translate(200,200)');
+      g.setAttribute('fill', '#F5F0E8');
+      for (let i = 0; i < 24; i++) {
+        const poly = document.createElementNS(svgNS, 'polygon');
+        const r = i % 2 === 0 ? 192 : 128;
+        const w = i % 2 === 0 ? 9 : 5;
+        poly.setAttribute('points', `0,${-r} ${-w},0 ${w},0`);
+        poly.setAttribute('transform', `rotate(${i * 15})`);
+        g.appendChild(poly);
+      }
+      const circle = document.createElementNS(svgNS, 'circle');
+      circle.setAttribute('cx', 0); circle.setAttribute('cy', 0);
+      circle.setAttribute('r', 32); circle.setAttribute('fill', '#E8B84B');
+      g.appendChild(circle);
+      svg.appendChild(g);
+    }
+    buildSunburst('hero-sunburst');
+    buildSunburst('contact-sunburst');
+
+    // ---- 2. Confetti Burst ----
+    (function initConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const COLORS = ['#C45C26','#E8B84B','#6B7A3E','#D4A017','#5C3A1E','#F5F0E8','#A0341A'];
+      const SHAPES = ['circle','square','triangle'];
+      const particles = [];
+      for (let i = 0; i < 130; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          size: Math.random() * 9 + 4,
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+          shape: SHAPES[Math.floor(Math.random() * SHAPES.length)],
+          speedY: Math.random() * 3.5 + 1,
+          speedX: (Math.random() - 0.5) * 2.5,
+          rotation: Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() - 0.5) * 0.12,
+          opacity: 1
+        });
+      }
+      let frame = 0;
+      function drawParticle(p) {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, p.opacity);
+        ctx.fillStyle = p.color;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        if (p.shape === 'circle') {
+          ctx.beginPath(); ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2); ctx.fill();
+        } else if (p.shape === 'square') {
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        } else {
+          ctx.beginPath();
+          ctx.moveTo(0, -p.size / 2);
+          ctx.lineTo(p.size / 2, p.size / 2);
+          ctx.lineTo(-p.size / 2, p.size / 2);
+          ctx.closePath(); ctx.fill();
+        }
+        ctx.restore();
+      }
+      function animateConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        frame++;
+        let alive = false;
+        particles.forEach(p => {
+          p.y += p.speedY; p.x += p.speedX;
+          p.rotation += p.rotSpeed;
+          if (frame > 70) p.opacity -= 0.014;
+          if (p.opacity > 0) { alive = true; drawParticle(p); }
+        });
+        if (alive) requestAnimationFrame(animateConfetti);
+        else canvas.style.display = 'none';
+      }
+      setTimeout(animateConfetti, 300);
+    })();
+
+    // ---- 3. Custom Cursor ----
+    (function initCursor() {
+      const dot  = document.getElementById('cursor-dot');
+      const glow = document.getElementById('cursor-glow');
+      if (!dot || !glow) return;
+      let glowX = 0, glowY = 0, dotX = 0, dotY = 0;
+      document.addEventListener('mousemove', e => {
+        dotX = e.clientX; dotY = e.clientY;
+        dot.style.left = dotX + 'px'; dot.style.top = dotY + 'px';
+      });
+      function animGlow() {
+        glowX += (dotX - glowX) * 0.12;
+        glowY += (dotY - glowY) * 0.12;
+        glow.style.left = glowX + 'px'; glow.style.top = glowY + 'px';
+        requestAnimationFrame(animGlow);
+      }
+      animGlow();
+      const hoverable = document.querySelectorAll('a, button, .flip-card, .position-card, .prod-card, .conf-item');
+      hoverable.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          dot.style.width = '18px'; dot.style.height = '18px';
+          glow.style.width = '70px'; glow.style.height = '70px';
+        });
+        el.addEventListener('mouseleave', () => {
+          dot.style.width = '8px'; dot.style.height = '8px';
+          glow.style.width = '40px'; glow.style.height = '40px';
+        });
+      });
+    })();
+
+    // ---- 4. Nav: Scrollspy + shadow + mobile toggle ----
+    (function initNav() {
+      const nav     = document.getElementById('main-nav');
+      const links   = document.querySelectorAll('.nav-link');
+      const toggle  = document.querySelector('.nav-toggle');
+      const linksList = document.getElementById('nav-links-list');
+      const sections = document.querySelectorAll('section[id]');
+
+      window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 40);
+      }, { passive: true });
+
+      const spy = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            links.forEach(l => l.classList.remove('active'));
+            const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+            if (active) active.classList.add('active');
+          }
+        });
+      }, { rootMargin: '-25% 0px -65% 0px' });
+      sections.forEach(s => spy.observe(s));
+
+      if (toggle) {
+        toggle.addEventListener('click', () => {
+          const open = linksList.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', open);
+        });
+      }
+      // Close mobile menu on link click
+      links.forEach(l => l.addEventListener('click', () => {
+        linksList.classList.remove('open');
+        toggle && toggle.setAttribute('aria-expanded', 'false');
+      }));
+    })();
+
+    // ---- 5. Typewriter ----
+    (function initTypewriter() {
+      const el = document.getElementById('typewriter-target');
+      if (!el) return;
+      const phrases = ['Dramaturg','Researcher','Digital Humanist','Horror Scholar','Theatre Maker','NEH Fellow'];
+      let pIdx = 0, cIdx = 0, deleting = false;
+      const SPEED_TYPE = 85, SPEED_DEL = 42, PAUSE_END = 1800, PAUSE_START = 420;
+      function tick() {
+        const phrase = phrases[pIdx];
+        if (!deleting) {
+          el.textContent = phrase.slice(0, ++cIdx);
+          if (cIdx === phrase.length) { deleting = true; setTimeout(tick, PAUSE_END); return; }
+        } else {
+          el.textContent = phrase.slice(0, --cIdx);
+          if (cIdx === 0) { deleting = false; pIdx = (pIdx + 1) % phrases.length; setTimeout(tick, PAUSE_START); return; }
+        }
+        setTimeout(tick, deleting ? SPEED_DEL : SPEED_TYPE);
+      }
+      setTimeout(tick, 1400);
+    })();
+
+    // ---- 6. Scroll Reveal ----
+    (function initScrollReveal() {
+      const sectionTitles = document.querySelectorAll('.section-title');
+      const sections = document.querySelectorAll('.reveal-section');
+      const items    = document.querySelectorAll('.reveal-item');
+
+      const titleObs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('revealed'); });
+      }, { threshold: 0.3 });
+      sectionTitles.forEach(t => titleObs.observe(t));
+
+      const sectionObs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('revealed'); });
+      }, { threshold: 0.08 });
+      sections.forEach(s => sectionObs.observe(s));
+
+      const itemObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            // assign direction class if not already set
+            if (!e.target.classList.contains('from-left') &&
+                !e.target.classList.contains('from-right') &&
+                !e.target.classList.contains('from-below')) {
+              e.target.classList.add('from-below');
+            }
+            e.target.classList.add('revealed');
+          }
+        });
+      }, { threshold: 0.12 });
+      items.forEach(el => itemObs.observe(el));
+    })();
+
+    // ---- 7. Flip Cards ----
+    (function initFlipCards() {
+      document.querySelectorAll('.flip-card').forEach(card => {
+        card.addEventListener('click', () => card.classList.toggle('flipped'));
+        card.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.classList.toggle('flipped'); }
+        });
+      });
+    })();
+
+    // ---- 8. Animated Wave Dividers ----
+    (function animateWaves() {
+      const paths = document.querySelectorAll('.wave-path');
+      if (!paths.length) return;
+      let t = 0;
+      function update() {
+        t += 0.008;
+        paths.forEach((path, i) => {
+          const speed  = i % 2 === 0 ? 1 : -0.75;
+          const amp    = i % 2 === 0 ? 20 : 13;
+          const offset = i * 1.2;
+          const pts = [];
+          for (let x = 0; x <= 1440; x += 180) {
+            const y = 40 + amp * Math.sin(t * speed + (x / 1440) * Math.PI * 2 + offset);
+            pts.push([x, y]);
+          }
+          // Build smooth cubic bezier path
+          let d = `M ${pts[0][0]},${pts[0][1]}`;
+          for (let j = 1; j < pts.length; j++) {
+            const [x1, y1] = pts[j - 1];
+            const [x2, y2] = pts[j];
+            const mx = (x1 + x2) / 2;
+            d += ` C ${mx},${y1} ${mx},${y2} ${x2},${y2}`;
+          }
+          d += ' L1440,80 L0,80 Z';
+          path.setAttribute('d', d);
+        });
+        requestAnimationFrame(update);
+      }
+      update();
+    })();
+
+  })(); // end IIFE
+  </script>
+</body>
+</html>
